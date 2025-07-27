@@ -73,5 +73,18 @@ openssl pkeyutl -decrypt -inkey admin.private.pem -in secret-admin.admin.enc -pk
 This will output the decrypted AppRole secret, which can then be used to log in to the Vault server using the AppRole's
 role ID. Refer to the [Vault documentation](https://developer.hashicorp.com/vault/docs/auth/approle) for details.
 
+## Storing the Recovery Keys
+In the event that the TPM device is lost or damaged, the unseal keys can be recovered using the recovery key stored
+on the secure recovery machine. Therefore, transport all unseal keys encrypted with the recovery key (default:
+`keys/unseal-key-*.recovery.enc`) to the recovery machine or a secure storage device.
+
+If needed, decrypt the unseal keys using the following `openssl` command:
+
+```sh
+openssl pkeyutl -decrypt -inkey recovery.private.pem -in unseal-key-*.recovery.enc -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256
+```
+
+A method to securely import the recovered unseal keys back into `vault-unsealer-tpm` is not yet implemented.
+
 ## Tests
 Please note that the tests currently can only be run with a real TPM device and the associated privileges.
