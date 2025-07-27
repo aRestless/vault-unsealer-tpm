@@ -60,7 +60,7 @@ The service will _not_ initialize a Vault if encrypted keys are already present 
 - `--init.key-threshold`: The number of unseal keys required to unseal the Vault.
 
 ### Unsealing
-If the given Vault is already initialized, the service will attempt to unseal it by encrypting and using the unseal keys
+If the given Vault is already initialized, the service will attempt to unseal it by decrypting and using the unseal keys
 stored on disk.
 
 ## Using the initialized Vault
