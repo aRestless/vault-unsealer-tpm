@@ -99,6 +99,11 @@ func getVaultConfig(cfg config.Config) (*api.Config, error) {
 	if cfg.VaultTLSSkipVerify {
 		tlsConfig.InsecureSkipVerify = true
 	}
+
+	if cfg.VaultTLSServerName != "" {
+		tlsConfig.ServerName = cfg.VaultTLSServerName
+	}
+
 	if cfg.VaultTLSCACert != "" {
 		caCert, err := os.ReadFile(cfg.VaultTLSCACert)
 		if err != nil {
@@ -221,6 +226,7 @@ func main() {
 	flag.StringVar(&cfg.VaultAddress, "vault.address", "http://127.0.0.1:8200", "The address of the Vault server.")
 	flag.BoolVar(&cfg.VaultTLSSkipVerify, "vault.tls.skip-verify", false, "If set, skip TLS verification.")
 	flag.StringVar(&cfg.VaultTLSCACert, "vault.tls.ca-cert", "", "Path to a CA certificate file for TLS verification.")
+	flag.StringVar(&cfg.VaultTLSServerName, "vault.tls.server-name", "", "Server name to use for TLS verification.")
 
 	flag.StringVar(&cfg.StorePath, "store-path", "./keys", "Path to store encrypted keys.")
 

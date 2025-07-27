@@ -12,6 +12,7 @@ type Config struct {
 	VaultAddress       string
 	VaultTLSSkipVerify bool
 	VaultTLSCACert     string
+	VaultTLSServerName string
 
 	// Initialization settings
 	InitRecoveryPubKey string
