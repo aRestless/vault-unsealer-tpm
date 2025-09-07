@@ -153,7 +153,7 @@ func (v *Vault) CreateAdminAppRole(adminRoleID string, rootToken string) (*Creat
 	}
 
 	// 3. Create admin AppRole
-	log.Printf("Creating admin AppRole with role ID: %s", adminRoleID)
+	log.Printf("Creating admin AppRole with role name: %s", adminRoleID)
 	_, err = v.client.Logical().Write(fmt.Sprintf("auth/approle/role/%s", adminRoleID), map[string]interface{}{
 		"policies": []string{"admin"},
 	})
@@ -161,7 +161,16 @@ func (v *Vault) CreateAdminAppRole(adminRoleID string, rootToken string) (*Creat
 		return nil, fmt.Errorf("failed to create admin approle: %w", err)
 	}
 
-	// 4. Generate the Secret ID
+	// 4. Set AppRole Role ID to Role Name
+	log.Printf("Updating admin AppRole to role ID: %s", adminRoleID)
+	_, err = v.client.Logical().Write(fmt.Sprintf("auth/approle/role/%s/role-id", adminRoleID), map[string]interface{}{
+		"role_id": adminRoleID,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to update admin approle: %w", err)
+	}
+
+	// 5. Generate the Secret ID
 	secretIDResp, err := v.client.Logical().Write(fmt.Sprintf("auth/approle/role/%s/secret-id", adminRoleID), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate secret id: %w", err)
